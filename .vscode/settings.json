@@ -10,5 +10,11 @@
     ".vscode",
     ".vscode-insiders",
     ".gitignore",
+  ],
+  "cSpell.words": [
+    "datasource",
+    "postgresql",
+    "prisma",
+    "uuid"
   ]
 }
