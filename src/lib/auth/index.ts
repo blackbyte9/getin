@@ -12,6 +12,17 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  user: {
+    additionalFields: {
+      role: {
+        type: ["USER", "ADMIN"],
+        default: "USER",
+      },
+    },
+  },
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+  },
   plugins: [
     nextCookies(),
   ],

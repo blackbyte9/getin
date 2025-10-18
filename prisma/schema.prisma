@@ -25,15 +25,22 @@ model Article {
 }
 
 // ### better auth
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
   id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   name          String
-  email         String  @unique
-  emailVerified Boolean @default(false)
+  email         String   @unique
+  emailVerified Boolean  @default(false)
   image         String?
+  role          UserRole @default(USER)
 
   sessions Session[]
   accounts Account[]
@@ -58,9 +65,9 @@ model Session {
 }
 
 model Account {
-  id                    String    @id
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   accountId             String
   providerId            String
@@ -72,16 +79,16 @@ model Account {
   scope                 String?
   password              String?
 
-  userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("accounts")
 }
 
 model Verification {
-  id         String   @id
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   identifier String
   value      String
