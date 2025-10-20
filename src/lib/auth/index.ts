@@ -5,6 +5,7 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { nextCookies } from 'better-auth/next-js';
 import { admin } from 'better-auth/plugins';
 import { ac, roles } from './permissions';
+import { sendEmailAction } from '@/actions/auth/email-send';
 
 export const auth = betterAuth({
   database:
@@ -14,6 +15,23 @@ export const auth = betterAuth({
 
   emailAndPassword: {
     enabled: true,
+    autoSignIn: false,
+    requireEmailVerification: true
+  },
+  emailVerification: {
+    sendOnSignIn: true,
+    expiresIn: 60 * 60 * 24, // 24 hours
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmailAction({
+        to: user.email,
+        subject: "Verify your email address",
+        meta: {
+          description: "Email verification for your account",
+          link: String(url),
+        }
+      });
+    }
   },
   databaseHooks: {
     user: {
