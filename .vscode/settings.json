@@ -12,6 +12,7 @@
     ".gitignore",
   ],
   "cSpell.words": [
+    "Bonanzbar",
     "datasource",
     "postgresql",
     "prisma",

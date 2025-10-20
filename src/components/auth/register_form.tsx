@@ -6,10 +6,12 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { signUp } from '@/lib/auth/client';
-import router from 'next/router';
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
     const [isPending, setIsPending] = React.useState(false);
+
+    const router = useRouter();
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();

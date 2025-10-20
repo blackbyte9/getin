@@ -6,10 +6,12 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
 import { signIn } from '@/lib/auth/client';
-import router from 'next/router';
+import { useRouter } from "next/navigation";
 
 export default function LoginForm() {
     const [isPending, setIsPending] = React.useState(false);
+
+    const router = useRouter();
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();

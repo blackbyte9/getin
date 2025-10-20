@@ -12,6 +12,19 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
   },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const adminEmails = process.env.ADMIN_EMAILS?.split(";") || [];
+          if (adminEmails.includes(user.email)) {
+            user.role = "ADMIN";
+          }
+          return { data: user };
+        }
+      }
+    }
+  },
   user: {
     additionalFields: {
       role: {
