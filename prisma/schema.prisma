@@ -15,11 +15,11 @@ datasource db {
 }
 
 model Article {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String   @id @default(uuid())
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  title String
+  title                 String
 
   @@map("articles")
 }
@@ -32,42 +32,48 @@ enum UserRole {
 }
 
 model User {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id                    String   @id
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
 
-  name          String
-  email         String   @unique
-  emailVerified Boolean  @default(false)
-  image         String?
-  role          UserRole @default(USER)
+  name                  String
+  email                 String  @unique
+  emailVerified         Boolean @default(false)
+  image                 String?
 
-  sessions Session[]
-  accounts Account[]
+  role                  UserRole  @default(USER)
+  banned                Boolean?  @default(false)
+  banReason             String?
+  banExpires            DateTime?
+
+  sessions              Session[]
+  accounts              Account[]
 
   @@map("users")
 }
 
 model Session {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String   @id
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
-  expiresAt DateTime
-  token     String   @unique
-  ipAddress String?
-  userAgent String?
+  expiresAt             DateTime
+  token                 String   @unique
+  ipAddress             String?
+  userAgent             String?
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  impersonatedBy        String?
+
+  userId                String
+  user                  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("sessions")
 }
 
 model Account {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                    String   @id
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 
   accountId             String
   providerId            String
@@ -79,20 +85,20 @@ model Account {
   scope                 String?
   password              String?
 
-  userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  user                  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("accounts")
 }
 
 model Verification {
-  id        String   @id
-  createdAt DateTime @default(now())
-  updatedAt DateTime @default(now()) @updatedAt
+  id                    String   @id
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @default(now()) @updatedAt
 
-  identifier String
-  value      String
-  expiresAt  DateTime
+  identifier            String
+  value                 String
+  expiresAt             DateTime
 
   @@map("verifications")
 }
