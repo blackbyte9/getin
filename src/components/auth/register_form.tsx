@@ -5,8 +5,8 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-import { signUp } from '@/lib/auth/client';
 import { useRouter } from "next/navigation";
+import { signUpEmailAction } from '@/actions/auth/sign-up-user';
 
 export default function RegisterForm() {
     const [isPending, setIsPending] = React.useState(false);
@@ -15,35 +15,21 @@ export default function RegisterForm() {
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        const formData = new FormData(event.target as HTMLFormElement);
-        const name = formData.get('name') as string;
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
 
-        if (!name || !email || !password) {
-            return toast.error('Please fill in all fields');
+        setIsPending(true);
+
+        const formData = new FormData(event.target as HTMLFormElement);
+
+        const { error } = await signUpEmailAction(formData);
+
+        if (error) {
+            toast.error(error);
+            setIsPending(false);
+        } else {
+            toast.success("Registration complete. You're all set.");
+            router.push("/");
         }
 
-        await signUp.email({
-            name,
-            email,
-            password,
-        }, {
-            onRequest: () => {
-                setIsPending(true);
-            },
-            onResponse: () => {
-                setIsPending(false);
-            },
-            onSuccess: () => {
-                toast.success('Account created successfully! Please check your email to verify your account.');
-                router.push('/');
-            },
-            onError: (ctx) => {
-                toast.error(`Error: ${ctx.error.message}`);
-                setIsPending(false);
-            },
-        });
     }
 
     return (

@@ -5,8 +5,8 @@ import { Label } from '../ui/label';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { toast } from 'sonner';
-import { signIn } from '@/lib/auth/client';
 import { useRouter } from "next/navigation";
+import { signInEmailAction } from '@/actions/auth/sign-in-user';
 
 export default function LoginForm() {
     const [isPending, setIsPending] = React.useState(false);
@@ -15,33 +15,20 @@ export default function LoginForm() {
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        setIsPending(true);
+
         const formData = new FormData(event.target as HTMLFormElement);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
 
-        if (!email || !password) {
-            return toast.error('Please fill in all fields');
+        const { error } = await signInEmailAction(formData);
+
+        if (error) {
+            toast.error(error);
+            setIsPending(false);
+        } else {
+            toast.success("Login successful. Good to have you back.");
+            router.push("/");
         }
-
-        await signIn.email({
-            email,
-            password,
-        }, {
-            onRequest: () => {
-                setIsPending(true);
-            },
-            onResponse: () => {
-                setIsPending(false);
-            },
-            onSuccess: () => {
-                toast.success('You are logged in successfully!');
-                router.push('/');
-            },
-            onError: (ctx) => {
-                toast.error(`Error: ${ctx.error.message}`);
-                setIsPending(false);
-            },
-        });
     }
 
     return (
